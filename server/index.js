@@ -1,13 +1,16 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const routes = require('./routes');
+require('dotenv').config()
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use('/api', routes);
 
-app.listen(process.env.PORT, () => {
-    console.log('Listening on port ' + process.env.PORT);
-})
-
-app.get('/', (req, res) => {
-    res.send('HELLO')
-})
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        app.listen(process.env.PORT, function(){
+            console.log("Listening on port " + process.env.PORT);
+        });
+    }).catch(err => console.log(err));
